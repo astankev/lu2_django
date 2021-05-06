@@ -1,48 +1,26 @@
 from django.shortcuts import render, HttpResponse
+from django.urls import reverse_lazy
 from user.models import User
+from django.views.generic import FormView, View, ListView
+from user.forms import UserForm
 
 
-def index(request):
+class UserListView(ListView):
 
-    users = User.objects.all()
+    model = User
+    template_name = 'user_list.html'
 
-    context = {
-        'users': users,
-    }
+class AddUserView(FormView):
 
-    return render(
-        template_name='index.html',
-        request=request,
-        context=context,
-    )
+    form_class = UserForm
+    template_name = 'add_user.html'
+    success_url = reverse_lazy('user-list')
 
+    def form_valid(self, form):
+        form.save()
 
-def add_user(request):
-
-    if request.method == 'POST':
-
-        user = User(
-            username=request.POST['name'],
-            email=request.POST['email'],
-        )
-
-        user.save()
-
-        context = {
-            'user': user,
-        }
-
-        return render(
-            template_name='user.html',
-            request=request,
-            context=context,
-
-        )
-
-    return render(
-        template_name='form.html',
-        request=request
-    )
+        response = super().form_valid(form)
+        return response
 
 
 def get_user(request, user_id):

@@ -19,8 +19,8 @@ import user.views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path ( '' , user.views.index ) ,
-    path ( 'add_user' , user.views.add_user ) ,
+    path ( '' , user.views.UserListView.as_view(), name='user-list'),
+    path ( 'add_user' , user.views.AddUserView.as_view()) ,
     path ( 'get_user/<int:user_id>' , user.views.get_user ) ,
     path ( 'edit_user/<int:user_id>' , user.views.edit_user ) ,
     path ( 'delete_user/<int:user_id>' , user.views.delete_user ) ,
